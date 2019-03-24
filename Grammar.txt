@@ -1,0 +1,93 @@
+hash : HASH INCLUDE LESSTHAN VARIABLE PERIOD VARIABLE GREATERTHAN
+
+program : hash functionDef program  
+		| functionDef
+		| functionDef program
+
+functionDef : paramList
+			| *empty*
+
+optParamList : paramList
+			 | *empty*
+			 
+paramList : VARIABLE
+		  | VARIABLE COMMA paramList
+		 
+block : AMPERSAND statement AMPERSAND
+
+statement : expression
+		  | operator
+		  | variableDef
+		  | ifStatement
+		  | whileLoop
+		  | forLoop
+		  | functionDef
+		  | returnStatement
+		  | statement
+
+whileLoop : WHILE OPAREN statement CPAREN block
+
+forLoop : FOR OPAREN statement CPAREN OPAREN expression EXCLAMATION CPAREN OPAREN expression EXCLAMATION CPAREN block
+
+returnStatement : RETURN VARIABLE EXCLAMATION
+				| RETURN VARIABLE COMMA STRING EXCLAMATION 
+				| RETURN VARIABLE COMMA INTEGER EXCLAMATION
+				| RETURN VARIABLE COMMA VARIABLE EXCLAMATION
+				| RETURN INTEGER EXCLAMATION
+				| RETURN INTEGER COMMA STRING EXCLAMATION 
+				| RETURN INTEGER COMMA INTEGER EXCLAMATION
+				| RETURN INTEGER COMMA VARIABLE EXCLAMATION
+				| RETURN STRING EXCLAMATION
+				| RETURN STRING COMMA STRING EXCLAMATION 
+				| RETURN STRING COMMA INTEGER EXCLAMATION
+				| RETURN STRING COMMA VARIABLE EXCLAMATION
+
+variableDef : VAR VARIABLE optInit EXCLAMATION
+				
+unary : ID
+      | INTEGER
+      | REAL
+      | TRUE/FALSE
+      | CHAR
+      | STRING
+      | OPEN_PAREN expression CLOSE_PAREN
+      | PRINT OPEN_PAREN expression CLOSE_PAREN	
+      | VARIABLE
+      | functioncall
+	  
+optExpressionList : expressionList
+				  | *empty*
+
+optInit : ASSIGN INTEGER expression
+		| ASSIGN STRING expression
+		| *empty*
+
+operator : PLUS
+	 | MINUS
+	 | TIMES
+	 | DIVIDE
+	 | EQUALS
+ 	 | MOD
+	 | NOT
+	 | FACTORIAL
+	 | ACCESS
+	 | AND
+	 | OR
+  	 | GREATERTHAN
+	 | LESSTHAN
+ 	 | SEMICOLON
+	
+
+ifStatement : IF OBRACE expression CPAREN block optElse
+
+optElse : ELSE block
+ 	| ELSE ifStatement
+ 	| *empty*
+
+functioncall : VARIABLE OPAREN optExpressionList CPAREN
+
+expressionList : expression
+			   | expression COMMA expressionList
+	
+expression : unary
+		   | unary operator expression
